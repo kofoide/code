@@ -132,10 +132,24 @@ SELECT
 	END AS ProductionRelativeWeekName
 
 -- Production Relative Helpers
-,	CASE WHEN D.ProductionWeekOfYearNumber <= T.ProductionWeekOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelProductionYTD
-,	CASE WHEN D.ProductionWeekOfYearNumber <= T.ProductionWeekOfYearNumber AND D.ProductionQuarterOfYearNumber = T.ProductionQuarterOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelProductionQTD
-,	CASE WHEN D.ProductionWeekOfYearNumber <= T.ProductionWeekOfYearNumber AND D.ProductionMonthOfYearNumber = T.ProductionMonthOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelProductionMTD
-,	CASE WHEN D.ProductionWeekOfYearNumber = T.ProductionWeekOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelProductionWTD
+
+-- This one is confusing and I am not sure what I am trying to accomplish
+--	I want to do the same thing as the next one but at the week level not the day level
+--,	CASE WHEN D.ProductionWeekOfYearNumber <= T.ProductionWeekOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelProductionYTDByWeek
+-- If the day of year number is LTE today's day of year number for any year, then it is a parallel YTD day
+,	CASE WHEN D.ProductionDayOfYearNumber <= T.ProductionDayOfYearNumber THEN 1 ELSE 0 END IsParallelProductionYTDByDay
+
+--,	CASE WHEN D.ProductionWeekOfYearNumber <= T.ProductionWeekOfYearNumber AND D.ProductionQuarterOfYearNumber = T.ProductionQuarterOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelProductionQTDByWeek
+-- If the day of quarter number is LTE today's day of quarter number for the same quarter of any year, then it is a parallel QTD day
+,	CASE WHEN D.ProductionDayOfQuarterNumber <= T.ProductionDayOfQuarterNumber AND D.ProductionQuarterOfYearNumber = T.ProductionQuarterOfYearNumber THEN 1 ELSE 0 END AS IsParallelProductionQTDByDay
+
+--,	CASE WHEN D.ProductionWeekOfYearNumber <= T.ProductionWeekOfYearNumber AND D.ProductionMonthOfYearNumber = T.ProductionMonthOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelProductionMTDByWeek
+-- If the day of month number is LTE today's day of month number for the same month of any year, then it is a parallel MTD day
+,	CASE WHEN D.ProductionDayOfMonthNumber <= T.ProductionDayOfMonthNumber AND D.ProductionMonthOfYearNumber = T.ProductionMonthOfYearNumber THEN 1 ELSE 0 END AS IsParallelProductionMTDByDay
+
+--,	CASE WHEN D.ProductionWeekOfYearNumber = T.ProductionWeekOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelProductionWTDByWeek
+-- If the day of week number is LTE today's day of week number for the same week of any year, then it is a parallel WTD day
+,	CASE WHEN D.ProductionDayOfWeekNumber <= T.ProductionDayOfWeekNumber AND D.ProductionWeekOfYearNumber = T.ProductionWeekOfYearNumber THEN 1 ELSE 0 END AS IsParallelProductionWTDByDay
 
 ,	CASE WHEN D.ProductionQuarterOfYearNumber = T.ProductionQuarterOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelProductionQuarterOfYear
 ,	CASE WHEN D.ProductionMonthOfYearNumber = T.ProductionMonthOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelProductionMonthOfYear
@@ -274,14 +288,29 @@ SELECT
 
 
 -- Accounting Relative Helpers
-,	CASE WHEN D.AccountingWeekOfYearNumber <= T.AccountingWeekOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelAccountingYTD
-,	CASE WHEN D.AccountingWeekOfYearNumber <= T.AccountingWeekOfYearNumber AND D.AccountingQuarterOfYearNumber = T.AccountingQuarterOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelAccountingQTD
-,	CASE WHEN D.AccountingWeekOfYearNumber <= T.AccountingWeekOfYearNumber AND D.AccountingMonthOfYearNumber = T.AccountingMonthOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelAccountingMTD
-,	CASE WHEN D.AccountingWeekOfYearNumber = T.AccountingWeekOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelAccountingWTD
+-- This one is confusing and I am not sure what I am trying to accomplish
+--	I want to do the same thing as the next one but at the week level not the day level
+--,	CASE WHEN D.AccountingWeekOfYearNumber <= T.AccountingWeekOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelAccountingYTDByWeek
+-- If the day of year number is LTE today's day of year number for any year, then it is a parallel YTD day
+,	CASE WHEN D.AccountingDayOfYearNumber <= T.AccountingDayOfYearNumber THEN 1 ELSE 0 END IsParallelAccountingYTDByDay
+
+--,	CASE WHEN D.AccountingWeekOfYearNumber <= T.AccountingWeekOfYearNumber AND D.AccountingQuarterOfYearNumber = T.AccountingQuarterOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelAccountingQTDByWeek
+-- If the day of quarter number is LTE today's day of quarter number for the same quarter of any year, then it is a parallel QTD day
+,	CASE WHEN D.AccountingDayOfQuarterNumber <= T.AccountingDayOfQuarterNumber AND D.AccountingQuarterOfYearNumber = T.AccountingQuarterOfYearNumber THEN 1 ELSE 0 END AS IsParallelAccountingQTDByDay
+
+--,	CASE WHEN D.AccountingWeekOfYearNumber <= T.AccountingWeekOfYearNumber AND D.AccountingMonthOfYearNumber = T.AccountingMonthOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelAccountingMTDByWeek
+-- If the day of month number is LTE today's day of month number for the same month of any year, then it is a parallel MTD day
+,	CASE WHEN D.AccountingDayOfMonthNumber <= T.AccountingDayOfMonthNumber AND D.AccountingMonthOfYearNumber = T.AccountingMonthOfYearNumber THEN 1 ELSE 0 END AS IsParallelAccountingMTDByDay
+
+--,	CASE WHEN D.AccountingWeekOfYearNumber = T.AccountingWeekOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelAccountingWTDByWeek
+-- If the day of week number is LTE today's day of week number for the same week of any year, then it is a parallel WTD day
+,	CASE WHEN D.AccountingDayOfWeekNumber <= T.AccountingDayOfWeekNumber AND D.AccountingWeekOfYearNumber = T.AccountingWeekOfYearNumber THEN 1 ELSE 0 END AS IsParallelAccountingWTDByDay
+
 
 ,	CASE WHEN D.AccountingQuarterOfYearNumber = T.AccountingQuarterOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelAccountingQuarterOfYear
 ,	CASE WHEN D.AccountingMonthOfYearNumber = T.AccountingMonthOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelAccountingMonthOfYear
 ,	CASE WHEN D.AccountingWeekOfYearNumber = T.AccountingWeekOfYearNumber THEN 'Y' ELSE 'N' END AS IsParallelAccountingWeekOfYear
+
 
 
 -- Today's Accounting Numbers (Used to help in date math for front end tools)
