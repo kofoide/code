@@ -4,26 +4,41 @@ GO
 
 
 CREATE TABLE [dbo].[DimDate](
-	[DateID] [int] NOT NULL,
-	[Date] [date] NOT NULL,
-	[AccountingYearNumber] [int] NOT NULL,
-	[AccountingQuarterOfYearNumber] [int] NOT NULL,
-	[AccountingMonthOfYearNumber] [int] NOT NULL,
-	[AccountingMonthOfQuarterNumber] [int] NOT NULL,
-	[AccountingWeekOfYearNumber] [int] NOT NULL,
-	[AccountingWeekOfMonthNumber] [int] NOT NULL,
-	[AccountingDayOfYearNumber] [int] NOT NULL,
-	[AccountingDayOfQuarterNumber] [int] NOT NULL,
-	[AccountingDayOfMonthNumber] [int] NOT NULL,
-	[AccountingDayOfWeekNumber] [int] NOT NULL,
+	[ThisDate] [date] NOT NULL,
 
- CONSTRAINT [PK_DimDate_Orig] PRIMARY KEY CLUSTERED 
+	[GregorianYear] [int] NOT NULL,
+	[GregorianQuarterOfYear] [int] NOT NULL,
+	[GregorianMonthOfYear] [int] NOT NULL,
+	[GregorianMonthOfQuarter] [int] NOT NULL,
+	[GregorianWeekOfYear] [int] NOT NULL,
+	[GregorianWeekOfQuarter] [int] NOT NULL,
+	[GregorianWeekOfMonth] [int] NOT NULL,
+	[GregorianDayOfYear] [int] NOT NULL,
+	[GregorianDayOfQuarter] [int] NOT NULL,
+	[GregorianDayOfMonth] [int] NOT NULL,
+	[GregorianDayOfWeek] [int] NOT NULL,
+
+	[Calendar1Year] [int] NULL,
+	[Calendar1QuarterOfYear] [int] NULL,
+	[Calendar1MonthOfYear] [int] NULL,
+	[Calendar1MonthOfQuarter] [int] NULL,
+	[Calendar1WeekOfYear] [int] NULL,
+	[Calendar1WeekOfQuarter] [int] NULL,
+	[Calendar1WeekOfMonth] [int] NULL,
+	[Calendar1DayOfYear] [int] NULL,
+	[Calendar1DayOfQuarter] [int] NULL,
+	[Calendar1DayOfMonth] [int] NULL,
+	[Calendar1DayOfWeek] [int] NULL,
+
+	[IsHoliday] [bit] NULL,
+	[IsWeekend] [bit] NOT NULL,
+ CONSTRAINT [PK_DimDate_1] PRIMARY KEY CLUSTERED 
 (
-	[DateID] ASC
+	[ThisDate] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
-
 GO
+
 
 
 
