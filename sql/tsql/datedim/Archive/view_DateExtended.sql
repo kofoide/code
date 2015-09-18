@@ -1,3 +1,7 @@
+/*
+This was an original date view, but I came up with a better one
+*/
+
 IF OBJECT_ID(N'dbo.DateExtended', N'V') IS NOT NULL
   DROP VIEW dbo.DateExtended
 GO
