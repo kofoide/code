@@ -20,3 +20,5 @@ These files are specifically for mac:
 * odbcinst.ini is an example of my odbcinst config
 
 On windows, just create a 32bit or 64bit ODBC connection with the same settings/names you use in odbc.ini
+Example file:
+* WindowsODBC.jpg
