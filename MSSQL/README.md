@@ -4,7 +4,7 @@ For some reason, python and MSSQL just don't like each other and if you use pyth
 
 This is my attempt at configuring my mac and windows in a single method to be able to connect to mssql from python.
 
-First, I am using a SQL Server Authentication login on the MSSQL server. I am not using a Windows Authentication login. It is simple to use Windows Authentication when running pythong on a windows box, but it isn't so simple when running it on mac.
+First, I am using a SQL Server Authentication login on the MSSQL server. I am not using a Windows Authentication login. It is simple to use Windows Authentication when running python on a windows box, but it isn't so simple when running it on mac.
 
 I learned 90% of this from here: [Mac setup to connect to MSSQL](https://github.com/lionheart/django-pyodbc/wiki/Mac-setup-to-connect-to-a-MS-SQL-Server)
 
@@ -20,5 +20,5 @@ These files are specifically for mac:
 * odbcinst.ini is an example of my odbcinst config
 
 On windows, just create a 32bit or 64bit ODBC connection with the same settings/names you use in odbc.ini
-Example file:
+Example image of ODBC:
 * WindowsODBC.jpg
