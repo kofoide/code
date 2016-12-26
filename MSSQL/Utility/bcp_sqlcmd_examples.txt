@@ -1,0 +1,25 @@
+bcp "SELECT * FROM SalesForce.eric.PredictRevenue" queryout Contacts.txt /SSalesOpsNA /c /t, -T
+
+SQLCMD -S SalesOpsNA -E -Q "SELECT * FROM SalesForce.eric.PredictRevenue" -s"," -b -W -o PredictRevenue.csv
+
+
+SQLCMD -S SalesOpsNA -E -Q "SELECT * FROM SalesForce.eric.DNB" -s"," -b -W -o ClusterProspect.csv
+
+
+
+SQLCMD -S SalesOpsNA -E -Q "SELECT * FROM Project.dbo.EricOutput" -s"," -b -W -o Output.csv
+# Use -C65001 for utf8 encoding
+
+
+##remove 2nd line
+sed "2d" Output.csv > Output1.csv
+
+##remove last line with something in it
+sed "$d" Output1.csv > Output2.csv
+
+##remove empty line
+sed "/^$/d" Output2.csv > Output3.csv
+
+rm Output.csv Output1.csv Output2.csv
+
+mv Output3.csv Output.csv
