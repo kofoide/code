@@ -1,12 +1,12 @@
-Setup Mac to connect to MSSQL
+# Setup Mac to connect to MSSQL
 
-This is a local copy of [lionheart/django-pyodbc wiki][0]
+This is a local copy of [lionheart/django-pyodbc wiki][0] with my own edits
 
-Below are instructions for setting up a Mac to connect to a MS SQL Server database.
+Below are instructions for setting up a Mac to connect to an MSSQL database
 
 **Summary**
 
-I'm using a Mac on Yosemite Version 10.10.1 trying to connect to a MS SQL Server database.  I searched and couldn't find an updated detailed answer so here's a writeup that is mostly from this amazing article [here][1].  I'm adding it on stackoverflow in case the link dies.  The idea is that we'll have the following layers to setup/connect.
+I'm using macOS Sierra 10.12.2 to connect to an MSSQL database locally and on Azure.  I searched and couldn't find an updated detailed answer so here's a writeup that is mostly from this amazing article [here][1].  I'm adding it on stackoverflow in case the link dies.  The idea is that we'll have the following layers to setup/connect.
 
 **Layers**
 
