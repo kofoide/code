@@ -1,4 +1,6 @@
-Welcome to the django-pyodbc wiki!
+Setup Mac to connect to MSSQL
+
+This is a local copy of [lionheart/django-pyodbc wiki][0]
 
 Below are instructions for setting up a Mac to connect to a MS SQL Server database.
 
@@ -99,6 +101,7 @@ I'm using a Mac on Yosemite Version 10.10.1 trying to connect to a MS SQL Server
 
 You can refer to the [documentation][4] of pyodbc to get more help after this.
 
+  [0]: https://github.com/lionheart/django-pyodbc/wiki/Mac-setup-to-connect-to-a-MS-SQL-Server
   [1]: http://www.cerebralmastication.com/2013/01/installing-debugging-odbc-on-mac-os-x/
   [2]: http://brew.sh/
   [3]: http://freetds.schemamania.org/userguide/choosingtdsprotocol.htm
