@@ -6,19 +6,19 @@ GO
 --SELECT S.*, G.api_id
 --FROM
 --			dbo.GOOGLE_API	G
---CROSS APPLY	dbo.fnSplit(G.api_id, G.api_dimensions, ',') S
+--CROSS APPLY	dbo.StringSplit(G.api_id, G.api_dimensions, ',') S
 --GROUP BY
 --	S.[key]
 
 
 IF EXISTS (SELECT * FROM sys.objects JOIN sys.schemas ON sys.objects.schema_id = sys.schemas.schema_id
 			WHERE sys.schemas.name = N'dbo'
-			AND	sys.objects.name = N'tfn_StringSplit'
+			AND	sys.objects.name = N'StringSplit'
 			AND sys.objects.type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-	DROP FUNCTION dbo.tfn_StringSplit
+	DROP FUNCTION dbo.StringSplit
 GO
 
-CREATE FUNCTION [dbo].[tfn_StringSplit](
+CREATE FUNCTION dbo.StringSplit(
 	@key INT
 ,	@sInputList VARCHAR(8000) -- List of delimited items
 ,	@sDelimiter VARCHAR(8000) = ',' -- delimiter that separates items

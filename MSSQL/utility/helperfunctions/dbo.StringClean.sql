@@ -1,12 +1,14 @@
-IF OBJECT_ID(N'dbo.CleanAndTrimString', N'FN') IS NOT NULL
-  DROP FUNCTION dbo.CleanAndTrimString
+IF OBJECT_ID(N'dbo.StringClean', N'FN') IS NOT NULL
+  DROP FUNCTION dbo.StringClean
 GO
 
 
-CREATE FUNCTION dbo.CleanAndTrimString
-	(@MyString as varchar(Max))
+CREATE FUNCTION dbo.StringClean(
+	@MyString as varchar(Max)
+)
 RETURNS VARCHAR(MAX)
 AS
+
 BEGIN
     --NULL
     SET @MyString = REPLACE(@MyString,CHAR(0),'');
