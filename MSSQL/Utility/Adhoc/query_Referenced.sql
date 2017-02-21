@@ -1,4 +1,4 @@
-DECLARE @objectnamequalified VARCHAR(128) = 'excl.StatesDB'
+DECLARE @objectnamequalified VARCHAR(128) = 'dbo.statesdb'
 
 -- What is referencing the object
 SELECT
