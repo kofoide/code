@@ -1,12 +1,15 @@
-IF OBJECT_ID(N'dbo.DimDate', N'V') IS NOT NULL
-  DROP VIEW dbo.DimDate
+IF OBJECT_ID(N'dim.Date', N'V') IS NOT NULL
+  DROP VIEW dim.[Date]
 GO
 
 
-CREATE VIEW [dbo].[DimDate]
+CREATE VIEW [dim].[Date]
 AS
 
--- Rankings for Relative Calculations
+-- *******************************************************************
+-- PERIOD RANKINGS CTE
+-- ************************************
+--#region Relative Rankings
 WITH RelativePeriods AS (
 SELECT
 	ID
@@ -15,8 +18,12 @@ SELECT
 ,	DENSE_RANK() OVER(ORDER BY CalendarYearNumber, CalendarWeekOfYearNumber) AS CalendarWeekNumRank
 FROM dbo.[Date]
 )
+--#endregion
 
--- Data for Today
+-- *******************************************************************
+-- TODAY CTE
+-- ************************************
+--#region Today
 , Today AS
 (SELECT
 	T.CalendarYearNumber			AS CurrentCalendarYearNumber
@@ -30,18 +37,28 @@ FROM dbo.[Date]
 ,	W.CalendarQuarterNumRank		AS CurrentCalendarQuarterNumRank
 ,	W.CalendarMonthNumRank			AS CurrentCalendarMonthNumRank
 ,	W.CalendarWeekNumRank			AS CurrentCalendarWeekNumRank
-FROM dbo.[Date]		T
+FROM dbo.[Date]     		T
 INNER JOIN RelativePeriods	W	ON T.ID = W.ID
 WHERE ThisDate = CAST(GETDATE() AS DATE)
 )
+-- *******************************************************************
+--#endregion
+
 
 SELECT
 	D.ID
+--#region Individual Columns
 ,	D.ThisDate
+,	D.IsWeekend
+,	D.IsOfficeWorkday
+,	D.IsCompanyHoliday
+,	D.JulianDate
+--#endregion
 
 -- *******************************************************************
 -- CALENDAR YEAR CALCULATIONS
 -- ************************************
+--#region Year
 ,	D.CalendarYearNumber
 
 ,	FIRST_VALUE(D.ThisDate) OVER (PARTITION BY D.CalendarYearNumber ORDER BY D.ThisDate ASC) AS CalendarYearBeginDate
@@ -60,13 +77,13 @@ SELECT
 ,	CASE WHEN D.CalendarDayOfYearNumber <= T.CurrentCalendarDayOfYearNumber THEN 'TRUE' ELSE 'FALSE' END AS IsParallelCalendarYTDByDay
 -- Is the Thisdate in the YTD zone for Closed Months
 ,	CASE WHEN D.CalendarMonthOfYearNumber < T.CurrentCalendarMonthOfYearNumber THEN 'TRUE' ELSE 'FALSE' END AS IsParallelCalendarYTDByClosedMonth
-
 -- *******************************************************************
-
+--#endregion
 
 -- *******************************************************************
 -- CALENDAR QUARTER CALCULATIONS
 -- ************************************
+--#region Quarter
 ,	D.CalendarQuarterOfYearNumber
 
 ,	FIRST_VALUE(D.ThisDate) OVER (PARTITION BY D.CalendarYearNumber, D.CalendarQuarterOfYearNumber ORDER BY D.ThisDate ASC) AS CalendarQuarterBeginDate
@@ -96,11 +113,12 @@ SELECT
 -- Is the DayOfQuarter for This Date in the same QTD zone for ANY QuarterOfYear
 ,	CASE WHEN D.CalendarDayOfQuarterNumber <= T.CurrentCalendarDayOfQuarterNumber THEN 'TRUE' ELSE 'FALSE' END AS IsParallelCalendarQTDAnyQuarterByDay
 -- *******************************************************************
-
+--#endregion
 
 -- *******************************************************************
 -- CALENDAR MONTH CALCULATIONS
 -- ************************************
+--#region Month
 ,	D.CalendarMonthOfYearNumber
 
 ,	FIRST_VALUE(D.ThisDate) OVER (PARTITION BY D.CalendarYearNumber, D.CalendarMonthOfYearNumber ORDER BY D.ThisDate ASC) AS CalendarMonthBeginDate
@@ -128,11 +146,12 @@ SELECT
 -- Is the DayOfMonth for ThisDate in the same MTD zone for ANY MonthOfYear
 ,	CASE WHEN D.CalendarDayOfMonthNumber <= T.CurrentCalendarDayOfMonthNumber THEN 'TRUE' ELSE 'FALSE' END AS IsParallelCalendarMTDAnyMonthByDay
 -- *******************************************************************
-
+--#endregion
 
 -- *******************************************************************
 -- CALENDAR WEEK CALCULATIONS
 -- ************************************
+--#region Week
 ,	D.CalendarWeekOfYearNumber
 
 ,	FIRST_VALUE(D.ThisDate) OVER (PARTITION BY D.CalendarYearNumber, D.CalendarWeekOfYearNumber ORDER BY D.ThisDate ASC) AS CalendarWeekBeginDate
@@ -164,42 +183,40 @@ SELECT
 		ELSE 'FALSE'
 	END AS IsParallelCalendarWTDAnyWeekByDay
 -- *******************************************************************
-
+--#endregion
 
 -- *******************************************************************
 -- CALENDAR DAY
 -- ************************************
+--#region Day
 -- Number of days into the year ThisDate is in
 ,	D.CalendarDayOfYearNumber
+-- Number of days remining in the year ThisDate is in
+,	FIRST_VALUE(D.CalendarDayOfYearNumber) OVER(PARTITION BY D.CalendarYearNumber
+													ORDER BY D.ThisDate DESC) - D.CalendarDayOfYearNumber AS CalendarDaysRemainingInYearNumber
+
 -- Number of days into the quarter ThisDate is in
 ,	D.CalendarDayOfQuarterNumber
--- Number of days remining in the querter ThisDate is in
-,	FIRST_VALUE(D.CalendarDayOfQuarterNumber) OVER(PARTITION BY D.CalendarYearNumber, D.CalendarQuarterOfYearNumber ORDER BY D.ThisDate DESC) - D.CalendarDayOfQuarterNumber AS CalendarDaysRemainingInQuarterNumber
+-- Number of days remining in the quarter ThisDate is in
+,	FIRST_VALUE(D.CalendarDayOfQuarterNumber) OVER(PARTITION BY D.CalendarYearNumber, D.CalendarQuarterOfYearNumber 
+													ORDER BY D.ThisDate DESC) - D.CalendarDayOfQuarterNumber AS CalendarDaysRemainingInQuarterNumber
+
 -- Number of days into the period ThisDate is in
 ,	D.CalendarDayOfMonthNumber
+-- Number of days remining in the month ThisDate is in
+,	FIRST_VALUE(D.CalendarDayOfMonthNumber) OVER(PARTITION BY D.CalendarYearNumber, D.CalendarMonthOfYearNumber
+													ORDER BY D.ThisDate DESC) - D.CalendarDayOfMonthNumber AS CalendarDaysRemainingInMonthNumber
+
 -- Number of days into the week ThisDate is in
 ,	D.CalendarDayOfWeekNumber
+-- Number of days remining in the week ThisDate is in
+,	7 - D.CalendarDayOfWeekNumber AS CalendarDaysRemainingInWeekNumber
 -- *******************************************************************
+--#endregion
 
 
----- *******************************************************************
----- CURRENT CALENDAR WEEK DATA
----- ************************************
---,	T.CurrentCalendarYearNumber
---,	T.CurrentCalendarQuarterOfYearNumber
---,	T.CurrentCalendarMonthOfYearNumber
---,	T.CurrentCalendarWeekOfYearNumber
---,	T.CurrentCalendarDayOfYearNumber
---,	T.CurrentCalendarDayOfQuarterNumber
---,	T.CurrentCalendarDayOfMonthNumber
---,	T.CurrentCalendarDayOfWeekNumber
----- *******************************************************************
 FROM
-			dbo.[Date]	D
+			dbo.[Date]	    D
 INNER JOIN	RelativePeriods	W	ON	D.ID = W.ID
 CROSS JOIN	Today			T
-
-
 GO
-
-
