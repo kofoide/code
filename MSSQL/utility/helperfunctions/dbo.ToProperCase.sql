@@ -1,8 +1,8 @@
-IF OBJECT_ID(N'dbo.ToProperCase', N'FN') IS NOT NULL
-  DROP FUNCTION dbo.ToProperCase
+IF OBJECT_ID(N'dbo.StringToProperCase', N'FN') IS NOT NULL
+  DROP FUNCTION dbo.StringToProperCase
 GO
 
-CREATE FUNCTION ToProperCase(@string VARCHAR(255)) RETURNS VARCHAR(255)
+CREATE FUNCTION dbo.StringToProperCase(@string VARCHAR(255)) RETURNS VARCHAR(255)
 AS
 BEGIN
   DECLARE @i INT           -- index

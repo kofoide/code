@@ -18,4 +18,4 @@ SELECT
 FROM AllRestores
 WHERE
     RowNum = 1
-AND DatabaseName IN ('ASM-AH', 'DynamicsWarehouse', 'NHACRM', 'NHACRMReporting', 'NHADATAMART')
+AND DatabaseName IN ('ASM-AH', 'DynamicsWarehouse', 'NHACRM', 'NHACRMReporting', 'NHADATAMART', 'NHAAnalytics', 'NHACertPortal')
