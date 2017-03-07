@@ -3,6 +3,7 @@ WITH AllRestores AS
 SELECT
     D.name AS DatabaseName
 ,   D.create_date AS DatabaseCreateDate
+,   D.state_desc AS DatabaseCurrentState
 ,   D.compatibility_level AS DatabaseCompatibilityLevel
 ,   D.collation_name AS DatabaseCollation
 ,   R.restore_date AS RestoreCompleteDate
@@ -14,7 +15,9 @@ LEFT JOIN   msdb.dbo.restorehistory R   ON   D.Name = R.destination_database_nam
 )
 SELECT
     DatabaseName
-,   RestoreCompleteDate
-FROM AllRestores
+,   RestoreCompleteDate AS PreviousRestoreComplete
+,   DatabaseCurrentState
+FROM
+            AllRestores R
 WHERE
     RowNum = 1

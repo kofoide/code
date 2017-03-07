@@ -12,8 +12,8 @@ SELECT DISTINCT
 -- Odds are if this object is not in the current db
 --  then it is a table from another db
     ISNULL(RO.type_desc, 'USER_TABLE') AS ObjectType 
-,   ISNULL(sed.referenced_server_name, @@SERVERNAME) AS ServerName
-,   ISNULL(sed.referenced_database_name, DB_NAME()) AS DatabaseName
+,   UPPER(ISNULL(sed.referenced_server_name, @@SERVERNAME)) AS ServerName
+,   UPPER(ISNULL(sed.referenced_database_name, DB_NAME())) AS DatabaseName
 ,   sed.referenced_schema_name AS SchemaName
 ,   sed.referenced_entity_name AS ObjectName
 
