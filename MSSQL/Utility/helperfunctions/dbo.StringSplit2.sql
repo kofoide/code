@@ -1,3 +1,7 @@
+-- Split a string of tokens into individual tokens
+--  If the first character is the split character
+--  assume the first token is NULL
+
 IF OBJECT_ID(N'dbo.StringSplit', N'TF') IS NOT NULL
   DROP FUNCTION dbo.StringSplit
 GO
@@ -6,7 +10,14 @@ CREATE FUNCTION dbo.StringSplit(
 	@key UNIQUEIDENTIFIER
 ,	@sInputList VARCHAR(8000) -- List of delimited items
 ,	@sDelimiter VARCHAR(8000) = ',' -- delimiter that separates items
-) RETURNS @List TABLE ([key] UNIQUEIDENTIFIER, item VARCHAR(8000), CardinalOrder INT)
+)
+RETURNS
+    @List TABLE
+    (
+        [key] UNIQUEIDENTIFIER
+    ,   item VARCHAR(8000)
+    ,   CardinalOrder INT
+    )
 
 BEGIN
 	DECLARE @sItem VARCHAR(8000)

@@ -10,6 +10,7 @@ RETURNS VARCHAR(MAX)
 AS
 
 BEGIN
+    -- Change all funky characters to a space
     --NULL
     SET @MyString = REPLACE(@MyString,CHAR(0),'');
     --Horizontal Tab
@@ -26,39 +27,47 @@ BEGIN
     SET @MyString = REPLACE(@MyString,CHAR(14),' ');
     --Non-breaking space
     SET @MyString = REPLACE(@MyString,CHAR(160),'');
-    --space
-    --SET @MyString = REPLACE(@MyString,' ','');
 
-	SET @MyString = LTRIM(RTRIM(@MyString));
+	SET @MyString = REPLACE(@MyString, '~', ' ')
+   	SET @MyString = REPLACE(@MyString, '`', ' ')
+	SET @MyString = REPLACE(@MyString, '!', ' ')
+	SET @MyString = REPLACE(@MyString, '@', ' ')
+	SET @MyString = REPLACE(@MyString, '#', ' ')
+	SET @MyString = REPLACE(@MyString, '$', ' ')
+	SET @MyString = REPLACE(@MyString, '%', ' ')
+	SET @MyString = REPLACE(@MyString, '^', ' ')
+	SET @MyString = REPLACE(@MyString, '&', ' ')
+	SET @MyString = REPLACE(@MyString, '(', ' ')
+	SET @MyString = REPLACE(@MyString, ')', ' ')
+    SET @MyString = REPLACE(@MyString, '_', ' ')
+	SET @MyString = REPLACE(@MyString, '-', ' ')
+	SET @MyString = REPLACE(@MyString, '+', ' ')
+	SET @MyString = REPLACE(@MyString, '=', ' ')
+	SET @MyString = REPLACE(@MyString, '[', ' ')
+	SET @MyString = REPLACE(@MyString, ']', ' ')
+	SET @MyString = REPLACE(@MyString, '{', ' ')
+	SET @MyString = REPLACE(@MyString, '}', ' ')
+	SET @MyString = REPLACE(@MyString, '|', ' ')
+	SET @MyString = REPLACE(@MyString, '\', ' ')
+	SET @MyString = REPLACE(@MyString, ':', ' ')
+	SET @MyString = REPLACE(@MyString, ';', ' ')
+	SET @MyString = REPLACE(@MyString, '"', ' ')
+	SET @MyString = REPLACE(@MyString, '''', ' ')
+	SET @MyString = REPLACE(@MyString, '<', ' ')
+	SET @MyString = REPLACE(@MyString, '>', ' ')
+	SET @MyString = REPLACE(@MyString, ',', ' ')
+	SET @MyString = REPLACE(@MyString, '.', ' ')
+	SET @MyString = REPLACE(@MyString, '?', ' ')
+	SET @MyString = REPLACE(@MyString, '/', ' ')
 
-	--@#$%^&()\|/?<>~'"
-	SET @MyString = REPLACE(@MyString, '@', '')
-	SET @MyString = REPLACE(@MyString, '#', '')
-	SET @MyString = REPLACE(@MyString, '$', '')
-	SET @MyString = REPLACE(@MyString, '%', '')
-	SET @MyString = REPLACE(@MyString, '&', '')
-	SET @MyString = REPLACE(@MyString, '^', '')
-	SET @MyString = REPLACE(@MyString, '(', '')
-	SET @MyString = REPLACE(@MyString, ')', '')
-	SET @MyString = REPLACE(@MyString, '[', '')
-	SET @MyString = REPLACE(@MyString, ']', '')
-	SET @MyString = REPLACE(@MyString, '{', '')
-	SET @MyString = REPLACE(@MyString, '}', '')
-	SET @MyString = REPLACE(@MyString, '\', '')
-	SET @MyString = REPLACE(@MyString, '|', '')
-	SET @MyString = REPLACE(@MyString, ':', '')
-	SET @MyString = REPLACE(@MyString, ';', '')
-	SET @MyString = REPLACE(@MyString, ',', '')
-	SET @MyString = REPLACE(@MyString, '.', '')
-	SET @MyString = REPLACE(@MyString, '<', '')
-	SET @MyString = REPLACE(@MyString, '>', '')
-	SET @MyString = REPLACE(@MyString, '?', '')
-	SET @MyString = REPLACE(@MyString, '/', '')
-	SET @MyString = REPLACE(@MyString, '"', '')
-	SET @MyString = REPLACE(@MyString, '''', '')
-	SET @MyString = REPLACE(@MyString, '-', '')
+    -- Reduce multiple spaces to a single space
+    IF CHARINDEX('  ', @MyString) > 0
+    BEGIN
+        SET @MyString = REPLACE(LTRIM(RTRIM(@MyString)), '  ', ' ' + CHAR(7))   --Changes 2 spaces to the OX model
+        SET @MyString = REPLACE(@MyString, CHAR(7) + ' ', '')                   --Changes the XO model to nothing
+        SET @MyString = REPLACE(@MyString, CHAR(7), '')                         --Changes the remaining X's to nothing
+    END
 
-    
     RETURN @MyString
 END
 GO
